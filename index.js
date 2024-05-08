@@ -3,8 +3,12 @@ const connectDb = require("./config/connectDb")    //importing a module from ano
 const {loginHandler , registerHandler} = require("./controllers/userController") 
 
 const port = 5000 
-const server = express()
+const server = express()   // 
 //middle wares
+
+
+
+
 
 
 server.use(express.json())   // used for parsing the json data coming from body 

@@ -1,23 +1,22 @@
 const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
 
 const registerHandler = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
     if (username !== "" && email !== "" && password !== "") {
+      const passCrypt = await bcrypt.hash(password, 10);
+      const isUser = await User.findOne({ email });
 
-      const isUser = await User.findOne({email})
-
-      if(isUser){
+      // true or false
+      if (isUser) {
         return res.json({ message: "User Already exists!" });
       }
-
-      const user = await new User({ username, email, password });
+      const user = await new User({ username, email, password: passCrypt });
       const save = await user.save();
-
       if (save) {
         res.json({ message: "User registered Succesfully!" });
-       
       } else {
         res.json({ message: "Some Error with Server" });
       }
@@ -31,7 +30,36 @@ const registerHandler = async (req, res) => {
 };
 
 const loginHandler = async (req, res) => {
-  res.send("hello");
+  const { email, password } = req.body;
+
+  if (email !== "" && password !== "") {
+
+    const existingUser = await User.findOne({ email });
+    
+    if (existingUser) {
+      const passVerify = await bcrypt.compare(password , existingUser.password )
+
+
+      if(passVerify){
+        res.json({ message: "logged in succesfully !" });
+      }
+      else{
+        res.json({ message: "Incorrect Password" });
+      }
+
+
+
+
+    } else {
+      res.json({ message: "User Not found!" });
+    }
+  } else {
+    res.json({ message: "All Credentials Required!" });
+  }
 };
 
 module.exports = { loginHandler, registerHandler };
+
+// const username =  req.body.username
+// const email = req.body.email
+// const password = req.body.password
