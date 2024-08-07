@@ -1,8 +1,0 @@
-
-
-
-
-
-
-
-const app  = express()      // inheritance 
