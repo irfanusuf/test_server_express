@@ -1,32 +1,34 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const multer = require('multer');
 const path = require('path');
+const { registerHandler, loginHandler } = require('./controllers/userController');
+const connectDb = require('./config/connectDb');
 const port = 5000;
 
+
 const app = express();
+
+
+
 app.use(cors());
 app.use(bodyParser.json());
 
+connectDb()
+
+app.use(express.static(path.join(__dirname , "client" , "build" , "static")))
 
 
-
-
-
-app.get("/" ,(req,res)=>{
-
+app.get("*" ,(req,res)=>{
   res.sendFile(path.join(__dirname , "client" , "build" , "index.html"))
-
 })
   
 
 
+// api routes
 
-
-
-
+app.post("/api/v1/user/register" , registerHandler)
+app.post("/api/v1/user/login" , loginHandler)
 
 
 

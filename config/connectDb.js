@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-const url = "mongodb://localhost:27017/testSSMDb";
 
-const connectDb = () => {
+const uri = "mongodb+srv://irfanusuf33:classy_123@classy-contour.52tbu.mongodb.net/maui?retryWrites=true&w=majority&appName=classy-contour";
+
+
+const connectDb = async () => {
   try {
-    const connect = mongoose.connect(url);
-    if (connect) {
-      console.log(`mongo  db connected on community server ${url}`);
-    }
+   await mongoose.connect(uri);
+    console.log(`Database Connected`);
   } catch (error) {
     console.log(error);
   }

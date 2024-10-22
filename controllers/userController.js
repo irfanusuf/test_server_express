@@ -11,20 +11,20 @@ const registerHandler = async (req, res) => {
 
       // true or false
       if (isUser) {
-        return res.json({ message: "User Already exists!" });
+        return res.status(200).json({ message: "User Already exists!" });
       }
       const user = await new User({ username, email, password: passCrypt });
       const save = await user.save();
       if (save) {
-        res.json({ message: "User registered Succesfully!" });
+        res.status(200).json({ message: "User registered Succesfully!" });
       } else {
-        res.json({ message: "Some Error with Server" });
+        res.status(500).json({ message: "Some Error with Server" });
       }
     } else {
       res.json({ message: "All Credentials Required!" });
     }
   } catch (error) {
-    res.json({ message: "Server Error " });
+    res.status(500).json({ message: "Server Error " });
     console.log(error);
   }
 };
@@ -33,23 +33,16 @@ const loginHandler = async (req, res) => {
   const { email, password } = req.body;
 
   if (email !== "" && password !== "") {
-
     const existingUser = await User.findOne({ email });
-    
+
     if (existingUser) {
-      const passVerify = await bcrypt.compare(password , existingUser.password )
+      const passVerify = await bcrypt.compare(password, existingUser.password);
 
-
-      if(passVerify){
+      if (passVerify) {
         res.json({ message: "logged in succesfully !" });
-      }
-      else{
+      } else {
         res.json({ message: "Incorrect Password" });
       }
-
-
-
-
     } else {
       res.json({ message: "User Not found!" });
     }
